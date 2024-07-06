@@ -29,12 +29,12 @@ namespace Library
 
         private static void createBooks(SqlConnection sqlConnection)
         {
-            string createBooks = "INSERT INTO BOOKS(ID,TITLE,AUTHOR,QUANTITY,TAKEN) " +
+            string createBooks = "INSERT INTO BOOKS(TITLE,AUTHOR,QUANTITY,TAKEN) " +
                     "VALUES " +
-                    "(1,'Alice Adventures in Wonderland','Lewis Carroll',5,0)," +
-                    "(2,'Harry Potter','J. K. Rowling',3,0)," +
-                    "(3,'Twilight','Stephenie Meyer',4,0)," +
-                    "(4,'Eragon','Christopher Paolini',3,0)";
+                    "('Alice Adventures in Wonderland','Lewis Carroll',5,0)," +
+                    "('Harry Potter','J. K. Rowling',3,0)," +
+                    "('Twilight','Stephenie Meyer',4,0)," +
+                    "('Eragon','Christopher Paolini',3,0)";
             if (bookExist(sqlConnection, "Alice Adventures in Wonderland") == false){
                 SqlCommand cmd = new SqlCommand(createBooks, sqlConnection);
                 cmd.ExecuteNonQuery();

@@ -19,7 +19,6 @@ namespace Library
             DbMigrate.migrate();
             DbSeed.seed();
 
-            
             bool inSystem = false;
             bool isAdmin = false;
 
@@ -32,18 +31,20 @@ namespace Library
                     string user = Console.ReadLine();
                     Console.WriteLine("Password:");
                     string pass = Console.ReadLine();
-                    if (UserRepo.LogUser(sqlConnection, user, pass) == true) {
+                    if (UserRepo.LogUser(sqlConnection, user, pass) == true)
+                    {
                         inSystem = true;
-                        if (user.Equals("admin")){
+                        if (user.Equals("admin"))
+                        {
                             isAdmin = true;
                         }
                     }
                 }
                 else if (choosen.Equals("R"))
                 {
-                    Console.WriteLine("Username (Up to 10 characters):");
+                    Console.WriteLine("Username (5 - 10 characters):");
                     string user = Console.ReadLine();
-                    Console.WriteLine("Password (Up to 20 characters):");
+                    Console.WriteLine("Password (5 - 20 characters):");
                     string pass = Console.ReadLine();
                     Console.WriteLine("First name:");
                     string fname = Console.ReadLine();
@@ -62,33 +63,60 @@ namespace Library
                 }
             }
 
-            if (isAdmin == true) {
+
+            if (isAdmin == true)
+            {
                 Console.WriteLine("За да видите всички книги натиснете 1");
                 Console.WriteLine("За да видите всички потребители натиснете 2");
                 Console.WriteLine("За да добавите нова книга натиснете 3");
                 Console.WriteLine("За да премахнете книга натиснете 4");
+                Console.WriteLine("За да напуснете натиснете 0");
                 int num = Int32.Parse(Console.ReadLine());
-
-                if (num == 1) {
-                    BookRepo.ShowBooks(sqlConnection);
-                }
-                else if (num == 2) {
-                    UserRepo.ShowUsers(sqlConnection);                   
-                }
-                else if (num == 3) {
-                    Console.WriteLine("Title:");
-                    string title = Console.ReadLine();
-                    Console.WriteLine("Author:");
-                    string author = Console.ReadLine();
-                    Console.WriteLine("Quantity:");
-                    int quantity = Int32.Parse(Console.ReadLine());
-                    BookRepo.CreateBook(sqlConnection, title, author, quantity);
-                }
-                else if (num == 4) { 
-                
+                while (num != 0) {
+                    if (num == 1)
+                    {
+                        BookRepo.ShowBooks(sqlConnection);
+                    }
+                    else if (num == 2)
+                    {
+                        UserRepo.ShowUsers(sqlConnection);
+                    }
+                    else if (num == 3)
+                    {
+                        Console.WriteLine("Title:");
+                        string title = Console.ReadLine();
+                        Console.WriteLine("Author:");
+                        string author = Console.ReadLine();
+                        Console.WriteLine("Quantity:");
+                        int quantity = Int32.Parse(Console.ReadLine());
+                        BookRepo.CreateBook(sqlConnection, title, author, quantity);
+                    }
+                    else if (num == 4)
+                    {
+                        Console.WriteLine("Title of book to delete:");
+                        string title = Console.ReadLine();
+                        BookRepo.DeleteBook(sqlConnection, title);
+                    }
+                    num = Int32.Parse(Console.ReadLine());
                 }
             }
+            else {
+                Console.WriteLine("За да видите всички книги натиснете 1");
+                Console.WriteLine("За да видите всички книги които сте взимали");
+                Console.WriteLine("За да вземете книга");
+                Console.WriteLine("За да напуснете натиснете 0");
+                int num = Int32.Parse(Console.ReadLine());
+                while (num != 0) {
+                    if (num == 1)
+                    {
+                        BookRepo.ShowBooks(sqlConnection);
+                    }
+                    else if (num == 2) {
 
+                    }
+                    num = Int32.Parse(Console.ReadLine());
+                }
+            }
         }
     }
 }

@@ -14,8 +14,14 @@ namespace Library
         SqlConnection sqlConnection = DbConnection.get();
         public static bool LogUser(SqlConnection sqlConnection,string username,string password) {
             bool isLogin = false;
-            if (userExist(sqlConnection,username) == true && 
-                passEquals(sqlConnection,username,password) == true) { 
+            if (userExist(sqlConnection, username) == false) {
+                Console.WriteLine("This username doesn't exists");
+            }
+            else if (passEquals(sqlConnection, username, password) == false) {
+                Console.WriteLine("Invalid pass");
+            }
+            else if (userExist(sqlConnection, username) == true &&
+                passEquals(sqlConnection, username, password) == true) {
                 isLogin = true;
             }
             return isLogin;
@@ -23,14 +29,18 @@ namespace Library
 
         public static bool RegisterUser(SqlConnection sqlConnection, string user, string pass, string fName, string sName) {
             bool isRegister = false;
-            string registerUser = $"INSERT INTO USERS(USERNAME,PASS,FNAME,SNAME) " +
-                    "VALUES ('{user}','{pass}','{fName}','{sName}')";
+            string registerUser = @"INSERT INTO USERS(USERNAME,PASS,FNAME,SNAME) " +
+                    "VALUES ('@user','@pass','@fName','@sName')";
             if (validateUsername(user) == true && validatePass(pass) == true &&
                 validateName(fName) == true && validateName(sName) == true)
             {
                 if (userExist(sqlConnection, user) == false)
                 {
                     SqlCommand cmd = new SqlCommand(registerUser, sqlConnection);
+                    cmd.Parameters.AddWithValue("@user", user);
+                    cmd.Parameters.AddWithValue("@pass", pass);
+                    cmd.Parameters.AddWithValue("@fName", fName);
+                    cmd.Parameters.AddWithValue("@sName", sName);
                     cmd.ExecuteNonQuery();
                     isRegister = true;
                 }
@@ -45,6 +55,7 @@ namespace Library
             while (reader.Read()){
                 Console.WriteLine($"{reader.GetInt32(0)} {reader.GetString(1)} {reader.GetString(2)}{reader.GetString(3)}{reader.GetString(4)}");
             }
+            reader.Close();
         }
 
 
@@ -54,7 +65,7 @@ namespace Library
             string corrPass = @"
                 SELECT PASS FROM USERS
                 WHERE USERNAME = @value
-                )";
+                ";
 
             SqlCommand command = new SqlCommand(corrPass, sqlConnection);
             command.Parameters.AddWithValue("@value", username);
@@ -64,7 +75,8 @@ namespace Library
                 if (pass == storedPassword){
                     equals = true;
                 }
-            }                                
+            }
+            reader.Close();
             return equals;
         }
 

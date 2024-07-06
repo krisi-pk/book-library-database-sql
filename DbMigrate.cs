@@ -16,7 +16,7 @@ namespace Library
             createDatabase(sqlConnection);
             createUsers(sqlConnection);
             createBooks(sqlConnection);
-            createTakenBooks(sqlConnection);
+            //createTakenBooks(sqlConnection);
         }
 
         private static void createDatabase(SqlConnection sqlConnection) {
@@ -68,7 +68,7 @@ namespace Library
             {
                 SqlCommand sqlCommand = new SqlCommand(createUsersBooksTable, sqlConnection);
                 sqlCommand.ExecuteNonQuery();
-            }          
+            }
         }
 
         private static bool databaseExist(SqlConnection sqlConnection) {
