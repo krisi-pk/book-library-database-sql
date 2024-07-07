@@ -30,7 +30,7 @@ namespace Library
         public static bool RegisterUser(SqlConnection sqlConnection, string user, string pass, string fName, string sName) {
             bool isRegister = false;
             string registerUser = @"INSERT INTO USERS(USERNAME,PASS,FNAME,SNAME) " +
-                    "VALUES ('@user','@pass','@fName','@sName')";
+                    "VALUES (@user,@pass,@fName,@sName)";
             if (validateUsername(user) == true && validatePass(pass) == true &&
                 validateName(fName) == true && validateName(sName) == true)
             {
@@ -53,7 +53,7 @@ namespace Library
             SqlCommand cmd = new SqlCommand(allUsers, sqlConnection);
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read()){
-                Console.WriteLine($"{reader.GetInt32(0)} {reader.GetString(1)} {reader.GetString(2)}{reader.GetString(3)}{reader.GetString(4)}");
+                Console.WriteLine($"{reader.GetInt32(0)} {reader.GetString(1)} {reader.GetString(2)} {reader.GetString(3)} {reader.GetString(4)}");
             }
             reader.Close();
         }

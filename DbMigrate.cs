@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace Library
             createDatabase(sqlConnection);
             createUsers(sqlConnection);
             createBooks(sqlConnection);
-            //createTakenBooks(sqlConnection);
+            createTakenBooks(sqlConnection);
         }
 
         private static void createDatabase(SqlConnection sqlConnection) {
@@ -59,10 +60,14 @@ namespace Library
         private static void createTakenBooks(SqlConnection sqlConnection)
         {
             string createUsersBooksTable = "create table TAKEN_BOOKS (" +
+                    "TakenBook_ID INT PRIMARY KEY IDENTITY(1,1)," +
                     "USER_ID INT," +
                     "BOOK_ID INT," +
-                    "CONSTRAINT frg_users FOREIGN KEY(USER_ID) REFERENCES USERS(ID)," +
-                    "CONSTRAINT frg_keys FOREIGN KEY(BOOK_ID) REFERENCES BOOKS(ID))";
+                    "FOREIGN KEY(USER_ID) REFERENCES USERS(ID)," +
+                    "FOREIGN KEY(BOOK_ID) REFERENCES BOOKS(ID))";
+
+                    //"CONSTRAINT frg_users FOREIGN KEY(USER_ID) REFERENCES USERS(ID)," +
+                    //"CONSTRAINT frg_keys FOREIGN KEY(BOOK_ID) REFERENCES BOOKS(ID))";
 
             if (tableExist("TAKEN_BOOKS", sqlConnection) == false)
             {
