@@ -113,13 +113,62 @@ namespace Library
 
 
         public static void ReturnBook(SqlConnection sqlConnection, string title, string user){
-            string checkIfExist = @"select TITLE from TAKEN_BOOKS " +
-                "where USERNAME = @user";
-            SqlCommand cmd = new SqlCommand(checkIfExist, sqlConnection);
+            List<string> userBooks = new List<string>();
+            string checkTakenBooks = $@"select b.TITLE  
+                FROM USERS u
+                JOIN TAKEN_BOOKS tb ON u.ID = tb.USER_ID
+                JOIN BOOKS b ON tb.BOOK_ID = b.ID
+                WHERE u.USERNAME = @user";
+            
+            SqlCommand cmd = new SqlCommand(checkTakenBooks, sqlConnection);
             cmd.Parameters.AddWithValue("@user", user);
-            object result = cmd.ExecuteScalar();
-            int idBook = Convert.ToInt32(result);
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows){
+                while (reader.Read())
+                {
+                    userBooks.Add(reader["TITLE"].ToString());
+                }
+            }
+            reader.Close();
 
+            if (userBooks.Contains(title)){
+                string takeQuantity = @"select QUANTITY from BOOKS " +
+                "where TITLE = @title";
+                SqlCommand cmd2 = new SqlCommand(takeQuantity, sqlConnection);
+                cmd2.Parameters.AddWithValue("@title", title);
+                object result2 = cmd2.ExecuteScalar();
+                int quantity = Convert.ToInt32(result2);
+
+                string takeTakens = @"select TAKEN from BOOKS " +
+                    "where TITLE = @title";
+                SqlCommand cmd3 = new SqlCommand(takeTakens, sqlConnection);
+                cmd3.Parameters.AddWithValue("@title", title);
+                object result3 = cmd3.ExecuteScalar();
+                int taken = Convert.ToInt32(result3);
+
+                string update = @"UPDATE BOOKS " +
+                    "SET QUANTITY = @quantity, TAKEN = @taken " +
+                    "WHERE TITLE = @title";
+                SqlCommand cmd4 = new SqlCommand(update, sqlConnection);
+                cmd4.Parameters.AddWithValue("@quantity", (quantity + 1));
+                cmd4.Parameters.AddWithValue("@taken", (taken - 1));
+                cmd4.Parameters.AddWithValue("@title", title);
+                cmd4.ExecuteNonQuery();
+
+                string removeBookFromTakens = @"
+                    DELETE FROM TAKEN_BOOKS
+                    WHERE USER_ID = (SELECT ID FROM USERS WHERE USERNAME = @user)
+                    AND BOOK_ID = (SELECT ID FROM BOOKS WHERE TITLE = @title);";
+                SqlCommand cmd5 = new SqlCommand(removeBookFromTakens, sqlConnection);
+                cmd5.Parameters.AddWithValue("@user", user);
+                cmd5.Parameters.AddWithValue("@title", title);
+                cmd5.ExecuteNonQuery();
+
+                Console.WriteLine("You return the book");
+            }
+            else {
+                Console.WriteLine("Не сте взимали тази книга");
+            }
         }
 
     }

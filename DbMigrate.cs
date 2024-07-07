@@ -66,9 +66,6 @@ namespace Library
                     "FOREIGN KEY(USER_ID) REFERENCES USERS(ID)," +
                     "FOREIGN KEY(BOOK_ID) REFERENCES BOOKS(ID))";
 
-                    //"CONSTRAINT frg_users FOREIGN KEY(USER_ID) REFERENCES USERS(ID)," +
-                    //"CONSTRAINT frg_keys FOREIGN KEY(BOOK_ID) REFERENCES BOOKS(ID))";
-
             if (tableExist("TAKEN_BOOKS", sqlConnection) == false)
             {
                 SqlCommand sqlCommand = new SqlCommand(createUsersBooksTable, sqlConnection);

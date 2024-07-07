@@ -58,6 +58,37 @@ namespace Library
             reader.Close();
         }
 
+        public static void UserTakensBook(SqlConnection sqlConnection, string user)
+        {
+            List<string> userBooks = new List<string>();
+            string checkTakenBooks = $@"select b.TITLE  
+                FROM USERS u
+                JOIN TAKEN_BOOKS tb ON u.ID = tb.USER_ID
+                JOIN BOOKS b ON tb.BOOK_ID = b.ID
+                WHERE u.USERNAME = @user";
+
+            SqlCommand cmd = new SqlCommand(checkTakenBooks, sqlConnection);
+            cmd.Parameters.AddWithValue("@user", user);
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    userBooks.Add(reader["TITLE"].ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine("You've take none books");
+            }
+            reader.Close();
+
+            for (int i = 0; i < userBooks.Count; i++)
+            {
+                Console.WriteLine(userBooks[i].ToString());
+            }
+        }
+
 
         private static bool passEquals(SqlConnection sqlConnection, string username, string pass)
         {

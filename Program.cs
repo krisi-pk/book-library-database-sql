@@ -13,6 +13,8 @@ namespace Library
     {
         static void Main(string[] args)
         {
+            // admin admin
+            // krisiK kisiK
 
             SqlConnection sqlConnection = DbConnection.get();
             sqlConnection.Open();
@@ -70,17 +72,10 @@ namespace Library
                 Console.WriteLine("За да видите всички потребители натиснете 2");
                 Console.WriteLine("За да добавите нова книга натиснете 3");
                 Console.WriteLine("За да премахнете книга натиснете 4");
-                Console.WriteLine("За да проверите коя книга от кой е взет натиснете 5");
-                Console.WriteLine("За да изтрия таблица Такен боокс натисни 6");
+                Console.WriteLine("За да проверите кой потребител коя книга е взел натиснете 5");
                 Console.WriteLine("За да напуснете натиснете 0");
                 int num = Int32.Parse(Console.ReadLine());
                 while (num != 0) {
-                    if (num == 6)
-                    {
-                        //string delete = "DROP TABLE TAKEN_BOOKS";
-                        //SqlCommand cmd = new SqlCommand(delete,sqlConnection);
-                        //cmd.ExecuteNonQuery();
-                    }
                     if (num == 1)
                     {
                         BookRepo.ShowBooks(sqlConnection);
@@ -107,9 +102,9 @@ namespace Library
                     }
                     else if (num == 5)
                     {
-                        Console.WriteLine("Title of book to delete:");
-                        string title = Console.ReadLine();
-                        BookRepo.DeleteBook(sqlConnection, title);
+                        Console.WriteLine("User to check all his takens books:");
+                        string user = Console.ReadLine();
+                        UserRepo.UserTakensBook(sqlConnection,user);
                     }
                     num = Int32.Parse(Console.ReadLine());
                 }
@@ -118,6 +113,7 @@ namespace Library
                 Console.WriteLine("За да видите всички свободни книги натиснете 1");
                 Console.WriteLine("За да вземете книга натиснете 2");
                 Console.WriteLine("За да видите всички книги които сте взимали натиснете 3");
+                Console.WriteLine("За да върнете книга натиснете 4");
                 Console.WriteLine("За да напуснете натиснете 0");
                 int num = Int32.Parse(Console.ReadLine());
                 while (num != 0) {
@@ -132,6 +128,20 @@ namespace Library
                         string user = Console.ReadLine();
                         BookRepo.TakeBook(sqlConnection, title, user);
                     }
+                    else if (num == 3) {
+                        Console.WriteLine("Your username: ");
+                        string user = Console.ReadLine();
+                        UserRepo.UserTakensBook(sqlConnection, user);
+                    }
+                    else if (num == 4)
+                    {
+                        Console.WriteLine("Your username: ");
+                        string user = Console.ReadLine();
+                        Console.WriteLine("Title of book: ");
+                        string title = Console.ReadLine();
+                        BookRepo.ReturnBook(sqlConnection, title, user);
+                    }
+
                     num = Int32.Parse(Console.ReadLine());
                 }
             }
