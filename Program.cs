@@ -73,6 +73,7 @@ namespace Library
                 Console.WriteLine("За да добавите нова книга натиснете 3");
                 Console.WriteLine("За да премахнете книга натиснете 4");
                 Console.WriteLine("За да проверите кой потребител коя книга е взел натиснете 5");
+                Console.WriteLine("За да изтриете всичко от книгите натиснете 6");
                 Console.WriteLine("За да напуснете натиснете 0");
                 int num = Int32.Parse(Console.ReadLine());
                 while (num != 0) {
@@ -105,6 +106,18 @@ namespace Library
                         Console.WriteLine("User to check all his takens books:");
                         string user = Console.ReadLine();
                         UserRepo.UserTakensBook(sqlConnection,user);
+                    }
+                    else if (num == 6)
+                    {
+                        string cmd2 = "delete from TAKEN_BOOKS";
+                        SqlCommand command2 = new SqlCommand(cmd2, sqlConnection);
+                        command2.ExecuteNonQuery();
+
+                        string cmd = "delete from BOOKS";
+                        SqlCommand command = new SqlCommand(cmd,sqlConnection);
+                        command.ExecuteNonQuery();
+
+                        
                     }
                     num = Int32.Parse(Console.ReadLine());
                 }
